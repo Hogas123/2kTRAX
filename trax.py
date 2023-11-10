@@ -66,20 +66,22 @@ class Game:
         return [self.player1, self.team1, self.score1, self.fgoal1, self.three1, self.player2, self.team2, self.score2, self.fgoal2, self.three2]
 
 class Label:
-    def __init__(self,m,w,h,data,type):
+    def __init__(self,m,x,y,w,h,data,type):
+        self.x = x
+        self.y = y
         self.width = w
         self.height = h
         self.data = data
 
-        pygame.draw.rect(m.view, "black", (m.width * 0.05, m.height *0.05, self.width, self.height))
+        pygame.draw.rect(m.view, "black", (self.x, self.y, self.width, self.height))
 
         if type == "Game":
             out1 = "Player: " + str(data[0]) + " Team: " + str(data[1]) + " Score: " + str(data[2]) + " FG%: " + str(data[3]) + " 3P%: " + str(data[4]) 
             out2 = "Player: " + str(data[5]) + " Team: " + str(data[6]) + " Score: " + str(data[7]) + " FG%: " + str(data[8]) + " 3P%: " + str(data[9]) 
             text1 = m.displayText.render(out1, 0, "white")
             text2 = m.displayText.render(out2, 0, "white")
-            m.view.blit(text1, (20, 100))
-            m.view.blit(text2, (20, 130))
+            m.view.blit(text1, (self.x + self.width * 0.02, self.y))
+            m.view.blit(text2, (self.x + self.width * 0.02, self.y + self.height *0.42))
             pygame.display.flip()
             
             
@@ -88,16 +90,16 @@ class Label:
             out2 = "AVG Score: " + str(data[3]) + " FG%: " + str(data[4]) + " 3P%: " + str(data[5])
             text1 = m.displayText.render(out1, 0, "white")
             text2 = m.displayText.render(out2, 0, "white")
-            m.view.blit(text1, (20, 100))
-            m.view.blit(text2, (20, 130))
+            m.view.blit(text1, (self.x + self.width * 0.02, self.y))
+            m.view.blit(text2, (self.x + self.width * 0.02, self.y + self.height *0.42))
             pygame.display.flip()
         elif type == "Player":
             out1 = "Team: " + str(data[0]) + " RECORD: (" + str(data[1]) + ", " + str(data[2]) + ")" 
             out2 = "AVG Score: " + str(data[3]) + " FG%: " + str(data[4]) + " 3P%: " + str(data[5])
             text1 = m.displayText.render(out1, 0, "white")
             text2 = m.displayText.render(out2, 0, "white")
-            m.view.blit(text1, (20, 100))
-            m.view.blit(text2, (20, 130))
+            m.view.blit(text1, (self.x + self.width * 0.02, self.y))
+            m.view.blit(text2, (self.x + self.width * 0.02, self.y + self.height *0.42))
             pygame.display.flip()
 
         pygame.display.flip()
@@ -110,7 +112,7 @@ class main:
 
         pygame.display.init()
         pygame.font.init()
-        self.displayText = pygame.font.SysFont("Serif", 28)
+        self.displayText = pygame.font.SysFont("Serif", 18)
         disp_info = pygame.display.Info()
         pygame.display.set_caption("2KTRAX")
 
@@ -249,7 +251,7 @@ m = main()
 m.load()
 m.setBackground()
 
-l = Label(m, 10, 10, [1,2,3,4,5,6,7,8,9,10], "Game" )
+l = Label(m, m.width * 0.05, m.height * 0.05, m.width * 0.9, m.height * 0.10 , ["Logan","Cavaliers",105,48,37,"Ben","Warriors",89,90,10], "Game" )
 
 running = True
 
@@ -264,6 +266,6 @@ while running:
 
 
 
-
+ 
  
 
