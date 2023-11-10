@@ -1,3 +1,5 @@
+import pygame, sys
+
 class GamePlayer:
     def __init__(self, n):
         self.name = n
@@ -13,6 +15,7 @@ class GamePlayer:
     def get_tpp(self): 
         tp = '{tp:.3f}'
         return tp.format(tp = (self.tp / (self.wins + self.losses)) / 100)
+    def toLabelData(self): return [self.fName + " " + self.lName, self.wins, self.losses, self.fg, self.tp]
 
 class NbaTeam:
     def __init__(self, c, n):
@@ -25,6 +28,7 @@ class NbaTeam:
         self.tp = 0
 
         self.starsList = []
+    def toLabelData(self): return [self.fName + " " + self.lName, self.wins, self.losses, self.fg, self.tp]
 
     def get_fgp(self): 
         fg = '{fg:.3f}'
@@ -42,6 +46,7 @@ class starPlayer:
         self.tp = 0
 
         self.pos = p
+    
 
 class Game:
     def __init__(self, p1, p2, t1, t2, s1, s2, f1, f2, tp1, tp2):
@@ -57,12 +62,69 @@ class Game:
         self.three2 = tp2
 
     def toText(self): return str(self.player1) + "," + str(self.team1) + "," + str(self.score1) + "," + str(self.fgoal1) + "," + str(self.three1) + "," + str(self.player2) + "," + str(self.team2) + "," + str(self.score2) + "," + str(self.fgoal2) + "," + str(self.three2)
+    def toLabelData(self):
+        return [self.player1, self.team1, self.score1, self.fgoal1, self.three1, self.player2, self.team2, self.score2, self.fgoal2, self.three2]
+
+class Label:
+    def __init__(self,m,w,h,data,type):
+        self.width = w
+        self.height = h
+        self.data = data
+
+        pygame.draw.rect(m.view, "black", (m.width * 0.05, m.height *0.05, self.width, self.height))
+
+        if type == "Game":
+            out1 = "Player: " + str(data[0]) + " Team: " + str(data[1]) + " Score: " + str(data[2]) + " FG%: " + str(data[3]) + " 3P%: " + str(data[4]) 
+            out2 = "Player: " + str(data[5]) + " Team: " + str(data[6]) + " Score: " + str(data[7]) + " FG%: " + str(data[8]) + " 3P%: " + str(data[9]) 
+            text1 = m.displayText.render(out1, 0, "white")
+            text2 = m.displayText.render(out2, 0, "white")
+            m.view.blit(text1, (20, 100))
+            m.view.blit(text2, (20, 130))
+            pygame.display.flip()
+            
+            
+        elif type == "Team":
+            out1 = "Player: " + str(data[0]) + " RECORD: (" + str(data[1]) + ", " + str(data[2]) + ")" 
+            out2 = "AVG Score: " + str(data[3]) + " FG%: " + str(data[4]) + " 3P%: " + str(data[5])
+            text1 = m.displayText.render(out1, 0, "white")
+            text2 = m.displayText.render(out2, 0, "white")
+            m.view.blit(text1, (20, 100))
+            m.view.blit(text2, (20, 130))
+            pygame.display.flip()
+        elif type == "Player":
+            out1 = "Team: " + str(data[0]) + " RECORD: (" + str(data[1]) + ", " + str(data[2]) + ")" 
+            out2 = "AVG Score: " + str(data[3]) + " FG%: " + str(data[4]) + " 3P%: " + str(data[5])
+            text1 = m.displayText.render(out1, 0, "white")
+            text2 = m.displayText.render(out2, 0, "white")
+            m.view.blit(text1, (20, 100))
+            m.view.blit(text2, (20, 130))
+            pygame.display.flip()
+
+        pygame.display.flip()
 
 class main:
     def __init__(self):
         self.gameList = []
         self.playerList = []
         self.initNBA()
+
+        pygame.display.init()
+        pygame.font.init()
+        self.displayText = pygame.font.SysFont("Serif", 28)
+        disp_info = pygame.display.Info()
+        pygame.display.set_caption("2KTRAX")
+
+        self.view = pygame.display.set_mode((disp_info.current_w / 2.25, disp_info.current_h / 1.35))
+        self.width = self.view.get_width()
+        self.height = self.view.get_height()
+
+    def setBackground(self):
+        baseC = 'dark grey'
+        panelC = "light grey"
+        
+        self.view.fill(baseC)
+        self.button_p = pygame.draw.rect(self.view, panelC, (self.width * 0.02, self.height * 0.85, self.width * 0.96, self.height * 0.13 ))
+        pygame.display.flip()
 
     def initNBA(self):
 
@@ -101,7 +163,7 @@ class main:
 
     def newGame(self):
       #NEED INTERFACE SYSTEM TO BRING IN GAMES PLAYER INTERACTION
-      pass
+        pass
 
     def save(self):
         f = open("./saveFile.txt", "w")
@@ -185,9 +247,20 @@ class main:
 
 m = main()
 m.load()
-print(m.playerList[1].get_fgp())
+m.setBackground()
+
+l = Label(m, 10, 10, [1,2,3,4,5,6,7,8,9,10], "Game" )
+
+running = True
+
+while running:
+    for event in pygame.event.get():
 
 
+
+        # QUIT app
+        if event.type == pygame.QUIT:
+            running = False
 
 
 
