@@ -118,8 +118,8 @@ class ListDisp:
             pygame.draw.rect(m.view, "black", (self.x + self.width *0.03, self.y+ self.height*0.2 + (i* self.height*1.04) , self.width * 0.94, self.height))
         for i in range(self.num):
             text = self.data[i + self.offset].draw()
-            m.view.blit(text[0], ((self.x + self.width *0.3, self.y+ self.height*0.3 + (i* self.height*1.04) , self.width * 0.94, self.height)))
-            m.view.blit(text[1], ((self.x + self.width *0.3, self.y+ self.height*0.7 + (i* self.height*1.04) , self.width * 0.94, self.height)))
+            m.view.blit(text[0], ((self.x + self.width *0.2, self.y+ self.height*0.3 + (i* self.height*1.04) , self.width * 0.94, self.height)))
+            m.view.blit(text[1], ((self.x + self.width *0.2, self.y+ self.height*0.7 + (i* self.height*1.04) , self.width * 0.94, self.height)))
             text = m.displayText.render("GAME", 0, "white")
             m.view.blit(text, ((self.x + self.width *0.05, self.y+ self.height*0.3 + (i* self.height*1.04) , self.width * 0.94, self.height)))
             text = m.displayText.render(str(self.offset + i +1), 0, "white")
@@ -140,6 +140,20 @@ class Button:
         m.view.blit(self.img, (self.x + self.width *0.03, self.y + self.height*0.03))
         pygame.display.flip()
 
+class inBox:
+    def __init__(self,m,x,y,w,h):
+        self.x = x
+        self.y = y
+        self.width = w
+        self.height = h
+        self.text = ''
+    
+    def draw(self):
+        pygame.draw.rect(m.view, "white", (self.x, self.y, self.width, self.height))
+        out = m.displayText.render(self.text, 0, "black")
+        m.view.blit(out,(self.x + self.width *0.1, self.y + self.height *0.05))
+        pygame.display.flip()
+
 
 class main:
     def __init__(self):
@@ -150,13 +164,15 @@ class main:
         pygame.display.init()
         pygame.font.init()
         self.displayText = pygame.font.SysFont("Serif", 20)
+        self.lblText = pygame.font.SysFont("Serif", 16)
         disp_info = pygame.display.Info()
         pygame.display.set_caption("2KTRAX")
 
-        self.view = pygame.display.set_mode((disp_info.current_w / 2.25, disp_info.current_h / 1.35))
+        self.view = pygame.display.set_mode((disp_info.current_w / 1.75, disp_info.current_h / 1.35))
         self.width = self.view.get_width()
         self.height = self.view.get_height()
         self.curDisp = "Games"
+        self.selected = 99
         
 
     def setBackground(self):
@@ -204,7 +220,65 @@ class main:
 
     def newGame(self):
       #NEED INTERFACE SYSTEM TO BRING IN GAMES PLAYER INTERACTION
-        pass
+        self.newG = ["","","","","","","","","",""]
+        self.toBuild = 10
+
+        self.p1B = inBox(self, self.width * 0.15, self.height * 0.1, self.width * 0.3, self.height * 0.1)
+        self.t1B = inBox(self, self.width * 0.15, self.height * 0.24, self.width * 0.3, self.height * 0.1)
+        self.s1B = inBox(self, self.width * 0.15, self.height * 0.38, self.width * 0.3, self.height * 0.1)
+        self.fg1B = inBox(self, self.width * 0.15, self.height * 0.52, self.width * 0.3, self.height * 0.1)
+        self.tp1B = inBox(self, self.width * 0.15, self.height * 0.66, self.width * 0.3, self.height * 0.1)
+        self.p2B =  inBox(self, self.width * 0.6, self.height * 0.1, self.width * 0.3, self.height * 0.1)
+        self.t2B = inBox(self, self.width * 0.6, self.height * 0.24, self.width * 0.3, self.height * 0.1)
+        self.s2B = inBox(self, self.width * 0.6, self.height * 0.38, self.width * 0.3, self.height * 0.1)
+        self.fg2B = inBox(self, self.width * 0.6, self.height * 0.52, self.width * 0.3, self.height * 0.1)
+        self.tp2B = inBox(self, self.width * 0.6, self.height * 0.66, self.width * 0.3, self.height * 0.1)
+
+
+    def drawNew(self):
+        self.setBackground()
+        if self.newG[0] == "":
+            self.p1B.draw()
+            text = self.lblText.render("Away Player:", 0, "black")
+            self.view.blit(text,(self.width * 0.15, self.height * 0.06))
+        if self.newG[1] == "":
+            self.t1B.draw()
+            text = self.lblText.render("Away Team:", 0, "black")
+            self.view.blit(text,(self.width * 0.15, self.height * 0.2))
+        if self.newG[2] == "":
+            self.s1B.draw()
+            text = self.lblText.render("Away Score:", 0, "black")
+            self.view.blit(text,(self.width * 0.15, self.height * 0.34))
+        if self.newG[3] == "":
+            self.fg1B.draw()
+            text = self.lblText.render("Away FG%:", 0, "black")
+            self.view.blit(text,(self.width * 0.15, self.height * 0.48))
+        if self.newG[4] == "":
+            self.tp1B.draw()
+            text = self.lblText.render("Away 3P%:", 0, "black")
+            self.view.blit(text,(self.width * 0.15, self.height * 0.62))
+        if self.newG[5] == "":
+            self.p2B.draw()
+            text = self.lblText.render("Home Player:", 0, "black")
+            self.view.blit(text,(self.width * 0.6, self.height * 0.06))
+        if self.newG[6] == "":
+            self.t2B.draw()
+            text = self.lblText.render("Home Team:", 0, "black")
+            self.view.blit(text,(self.width * 0.6, self.height * 0.2))
+        if self.newG[7] == "":
+            self.s2B.draw()
+            text = self.lblText.render("Home Score:", 0, "black")
+            self.view.blit(text,(self.width * 0.6, self.height * 0.34))
+        if self.newG[8] == "":
+            self.fg2B.draw()
+            text = self.lblText.render("Home FG%:", 0, "black")
+            self.view.blit(text,(self.width * 0.6, self.height * 0.48))
+        if self.newG[9] == "":
+            self.tp2B.draw()
+            text = self.lblText.render("Home 3P%:", 0, "black")
+            self.view.blit(text,(self.width * 0.6, self.height * 0.62))
+        
+        pygame.display.flip()
 
     def save(self):
         f = open("./saveFile.txt", "w")
@@ -297,6 +371,7 @@ m.load()
 m.setBackground()
 m.displayGames()
 running = True
+addingGame = False
 
 while running:
     for event in pygame.event.get():
@@ -305,6 +380,7 @@ while running:
 
         # QUIT app
         if event.type == pygame.QUIT:
+            m.save()
             running = False
         elif event.type == pygame.MOUSEWHEEL:
             if m.curDisp == "Games":
@@ -319,7 +395,97 @@ while running:
         elif event.type == pygame.MOUSEBUTTONUP:
             pos = pygame.mouse.get_pos()
             if pos[0] > m.add_btn.x and pos[0] < m.add_btn.x + m.add_btn.width and pos[1] > m.add_btn.y and pos[1] < m.add_btn.y + m.add_btn.height:
-                print('CLICK')
+                m.newGame()
+                m.drawNew()
+                addingGame = True
+            
+            if addingGame and m.newG[0] == "" and pos[0] > m.p1B.x and pos[0] < m.p1B.x + m.p1B.width and pos[1] > m.p1B.y and pos[1] < m.p1B.y + m.p1B.height:
+                m.selected = 0
+            if addingGame and m.newG[1] == "" and pos[0] > m.t1B.x and pos[0] < m.t1B.x + m.t1B.width and pos[1] > m.t1B.y and pos[1] < m.t1B.y + m.t1B.height:
+                m.selected = 1
+            if addingGame and m.newG[2] == "" and pos[0] > m.s1B.x and pos[0] < m.s1B.x + m.s1B.width and pos[1] > m.s1B.y and pos[1] < m.s1B.y + m.s1B.height:
+                m.selected = 2
+            if addingGame and m.newG[3] == "" and pos[0] > m.fg1B.x and pos[0] < m.fg1B.x + m.fg1B.width and pos[1] > m.fg1B.y and pos[1] < m.fg1B.y + m.fg1B.height:
+                m.selected = 3
+            if addingGame and m.newG[4] == "" and pos[0] > m.tp1B.x and pos[0] < m.tp1B.x + m.tp1B.width and pos[1] > m.tp1B.y and pos[1] < m.tp1B.y + m.tp1B.height:
+                m.selected = 4
+            if addingGame and m.newG[5] == "" and pos[0] > m.p2B.x and pos[0] < m.p2B.x + m.p2B.width and pos[1] > m.p2B.y and pos[1] < m.p2B.y + m.p2B.height:
+                m.selected = 5
+            if addingGame and m.newG[6] == "" and pos[0] > m.t2B.x and pos[0] < m.t2B.x + m.t2B.width and pos[1] > m.t2B.y and pos[1] < m.t2B.y + m.t2B.height:
+                m.selected = 6
+            if addingGame and m.newG[7] == "" and pos[0] > m.s2B.x and pos[0] < m.s2B.x + m.s2B.width and pos[1] > m.s2B.y and pos[1] < m.s2B.y + m.s2B.height:
+                m.selected = 7
+            if addingGame and m.newG[8] == "" and pos[0] > m.fg2B.x and pos[0] < m.fg2B.x + m.fg2B.width and pos[1] > m.fg2B.y and pos[1] < m.fg2B.y + m.fg2B.height:
+                m.selected = 8
+            if addingGame and m.newG[9] == "" and pos[0] > m.tp2B.x and pos[0] < m.tp2B.x + m.tp2B.width and pos[1] > m.tp2B.y and pos[1] < m.tp2B.y + m.tp2B.height:
+                m.selected = 9
+
+        elif event.type == pygame.KEYDOWN and m.selected != 99:
+            if event.key == pygame.K_RETURN:
+                if m.selected == 0:
+                    m.newG[0] = m.p1B.text
+                    m.toBuild -= 1
+                elif m.selected == 1:
+                    m.newG[1] = m.t1B.text
+                    m.toBuild -= 1
+                elif m.selected == 2:
+                    m.newG[2] = m.s1B.text
+                    m.toBuild -= 1
+                elif m.selected == 3:
+                    m.newG[3] = m.fg1B.text
+                    m.toBuild -= 1
+                elif m.selected == 4:
+                    m.newG[4] = m.tp1B.text
+                    m.toBuild -= 1
+                elif m.selected == 5:
+                    m.newG[5] = m.p2B.text
+                    m.toBuild -= 1
+                elif m.selected == 6:
+                    m.newG[6] = m.t2B.text
+                    m.toBuild -= 1
+                elif m.selected == 7:
+                    m.newG[7] = m.s2B.text
+                    m.toBuild -= 1
+                elif m.selected == 8:
+                    m.newG[8] = m.fg2B.text
+                    m.toBuild -= 1
+                elif m.selected == 9:
+                    m.newG[9] = m.tp2B.text
+                    m.toBuild -= 1
+                m.selected = 99
+                
+                if m.toBuild <= 0:
+                    m.gameList.append(Game(m.newG[0], m.newG[1], str(m.newG[2]), str(m.newG[3]), str(m.newG[4]), m.newG[5], m.newG[6], str(m.newG[7]), str(m.newG[8]), str(m.newG[9])))
+                    addingGame = False
+                    m.displayGames()
+            else:
+                if m.selected == 0:
+                    m.p1B.text += event.unicode
+                elif m.selected == 1:
+                    m.t1B.text +=event.unicode
+                elif m.selected == 2:
+                    m.s1B.text +=event.unicode
+                elif m.selected == 3:
+                    m.fg1B.text +=event.unicode
+                elif m.selected == 4:
+                    m.tp1B.text +=event.unicode
+                elif m.selected == 5:
+                    m.p2B.text +=event.unicode
+                elif m.selected == 6:
+                    m.t2B.text +=event.unicode
+                elif m.selected == 7:
+                    m.s2B.text +=event.unicode
+                elif m.selected == 8:
+                    m.fg2B.text +=event.unicode
+                elif m.selected == 9:
+                    m.tp2B.text +=event.unicode
+            
+            if addingGame:
+                m.drawNew()
+
+
+
+                
 
 
 
